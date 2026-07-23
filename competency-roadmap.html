@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data → Quantum Competency Roadmap</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#0A1420;
+  --panel:#0F1E30;
+  --panel-2:#132639;
+  --border:#1E3A56;
+  --core:#4FD1C5;
+  --core-dim:#2C5450;
+  --math:#B98CE0;
+  --math-dim:#4A3F63;
+  --text:#DCE8F2;
+  --text-dim:#7B93AC;
+  --text-faint:#4A5F76;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 10% 0%, #102338 0%, transparent 45%),
+    radial-gradient(circle at 90% 6%, #0d1c2e 0%, transparent 40%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+}
+.grid-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(79,209,197,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,209,197,0.03) 1px, transparent 1px);
+  background-size:32px 32px;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 20%, transparent 85%);
+}
+
+.wrap{position:relative; z-index:1; max-width:760px; margin:0 auto; padding:40px 20px 70px;}
+
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--core); margin-bottom:12px; display:flex; align-items:center; gap:9px;
+}
+.eyebrow::before{content:''; width:20px; height:1px; background:var(--core); display:inline-block;}
+h1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(24px,6vw,32px); line-height:1.12; margin:0 0 10px; letter-spacing:-0.01em;}
+h1 span{color:#E8A33D;}
+.sub{color:var(--text-dim); font-size:14.5px; line-height:1.6; margin:0 0 26px;}
+
+.selector{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px 18px 16px; margin-bottom:18px;}
+.selector-title{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faint); margin-bottom:12px;}
+.chip-groups{display:flex; flex-direction:column; gap:14px;}
+.chip-group-label{font-size:10.5px; color:var(--text-faint); margin-bottom:7px; font-family:'IBM Plex Mono',monospace;}
+.chips{display:flex; flex-wrap:wrap; gap:7px;}
+.chip{
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; background:transparent;
+  border:1px solid var(--pc, var(--border)); color:var(--text-dim);
+  padding:6px 11px; border-radius:20px; cursor:pointer; transition:all .18s ease; user-select:none;
+}
+.chip:hover{color:var(--text);}
+.chip.active{ background:color-mix(in srgb, var(--pc) 16%, transparent); color:var(--pc); box-shadow:0 0 0 1px var(--pc), 0 0 12px color-mix(in srgb, var(--pc) 45%, transparent); }
+.chip .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--pc); margin-right:6px;}
+
+.legend{display:flex; flex-wrap:wrap; gap:14px 18px; margin-bottom:30px;}
+.legend-item{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-faint); font-family:'IBM Plex Mono',monospace;}
+.legend-dot{width:9px; height:9px; border-radius:50%;}
+
+/* vertical rail */
+.rail{position:relative; padding-left:30px;}
+.rail::before{
+  content:''; position:absolute; left:8px; top:4px; bottom:70px; width:2px;
+  background:linear-gradient(180deg, var(--core), var(--math) 55%, #E8A33D 100%);
+  opacity:0.32;
+}
+
+.phase{position:relative; margin-bottom:36px;}
+.phase-node{
+  position:absolute; left:-30px; top:0px; width:18px; height:18px; border-radius:50%;
+  background:var(--panel); border:2px solid var(--core); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 14px rgba(79,209,197,0.35);
+}
+.phase-node::after{content:''; width:5px; height:5px; border-radius:50%; background:var(--core);}
+.phase-head{display:flex; align-items:baseline; gap:10px; margin-bottom:14px;}
+.phase-index{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-faint);}
+.phase h2{font-family:'Space Grotesk',sans-serif; font-size:18px; margin:0; font-weight:600;}
+
+.zone{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; position:relative;}
+.zone-label{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faint); margin-bottom:11px; display:flex; align-items:center; gap:7px;}
+.zone-label .sw{width:8px; height:8px; border-radius:2px;}
+.zone-label.main .sw{background:var(--core);}
+.zone-label.competency .sw{background:var(--math);}
+.zone-label.platforms .sw{background:#E8983D;}
+
+.bubble-row{display:flex; flex-wrap:wrap; gap:12px 14px;}
+.empty-note{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-faint); font-style:italic;}
+
+.node{display:flex; flex-direction:column; align-items:center; gap:5px; width:70px;}
+.bubble{
+  width:50px; height:50px; border-radius:50%; border:2px solid var(--border); background:var(--panel-2);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative;
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--text-dim);
+  transition:all .18s ease; padding:0;
+}
+.node.path .bubble{width:40px; height:40px;}
+.bubble:active{transform:scale(0.96);}
+.bubble.main{border-color:var(--core); background:radial-gradient(circle at 35% 30%, #1a3b38, var(--panel-2)); color:var(--core); box-shadow:0 0 14px rgba(79,209,197,0.26);}
+.bubble.math{border-color:var(--math); background:radial-gradient(circle at 35% 30%, #2c2340, var(--panel-2)); color:var(--math); box-shadow:0 0 14px rgba(185,140,224,0.22);}
+.bubble.path-b{border-color:var(--pc, var(--border)); opacity:0.32; filter:grayscale(0.5);}
+.bubble.path-b.lit{opacity:1; filter:none; background:radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--pc) 28%, #0F1E30), var(--panel-2)); box-shadow:0 0 14px color-mix(in srgb, var(--pc) 55%, transparent); color:var(--pc);}
+
+.blabel{font-size:9.5px; text-align:center; line-height:1.2; color:var(--text-dim);}
+.node.path .blabel{color:var(--text-faint); font-size:9px;}
+
+.popover{
+  position:fixed; z-index:80; background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  padding:13px 15px 14px; width:250px; max-width:calc(100vw - 24px); box-shadow:0 16px 44px rgba(0,0,0,0.55);
+  opacity:0; pointer-events:none; transform:translateY(6px); transition:opacity .14s ease, transform .14s ease;
+}
+.popover.show{opacity:1; pointer-events:auto; transform:translateY(0);}
+.pop-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;}
+.pop-title{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13.5px;}
+.pop-path{font-family:'IBM Plex Mono',monospace; font-size:9.5px; border:1px solid var(--border); padding:2px 7px; border-radius:20px; color:var(--text-faint); white-space:nowrap;}
+.pop-topics{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:5px;}
+.pop-topics li{font-size:11px; color:var(--text-dim); background:var(--panel-2); padding:3px 8px; border-radius:6px; line-height:1.3;}
+
+footer{position:relative; z-index:1; text-align:center; color:var(--text-faint); font-family:'IBM Plex Mono',monospace; font-size:10.5px; max-width:760px; margin:0 auto; padding:0 20px 10px;}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <div class="eyebrow">Competency Roadmap</div>
+  <h1>Data Analyst → Data Scientist <span>— Quantum</span></h1>
+  <p class="sub">Six phases, top to bottom. Main (teal) is the required core — everyone builds this regardless of stack. Competency (violet) is the math track. Toggle a platform below to light up its bubble wherever it appears.</p>
+
+  <div class="selector">
+    <div class="selector-title">Select your stack</div>
+    <div class="chip-groups">
+      <div><div class="chip-group-label">Cloud / Data Platform</div><div class="chips" id="chips-cloud"></div></div>
+      <div><div class="chip-group-label">BI Tools</div><div class="chips" id="chips-bi"></div></div>
+      <div><div class="chip-group-label">Quantum SDK</div><div class="chips" id="chips-quantum"></div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--core)"></span>Main — required</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--math)"></span>Competency — math</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#E8983D"></span>Platform — selected</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#3a4d5f"></span>Platform — not selected</div>
+  </div>
+
+  <div class="rail" id="rail"></div>
+</div>
+
+<div class="popover" id="popover">
+  <div class="pop-head"><span class="pop-title" id="pop-title"></span><span class="pop-path" id="pop-path"></span></div>
+  <ul class="pop-topics" id="pop-topics"></ul>
+</div>
+
+<footer>190 topics · 6 phases · tap any bubble to see its topics</footer>
+
+<script>
+const PATH_COLORS = {
+  'AWS':'#E8983D', 'Azure':'#3E8EDE', 'GCP':'#46B893', 'Snowflake':'#63C7E8',
+  'Tableau':'#E0755A', 'Power Platform':'#F2C94C', 'IBM':'#8C7AE6'
+};
+const TOGGLEABLE = { cloud:['AWS','Azure','GCP','Snowflake'], bi:['Tableau','Power Platform'], quantum:['IBM'] };
+
+const roadmap = [
+{phase:"Foundation", primary:[
+    {path:"Main", subject:"Basic SQL", topics:["SELECT clause","WHERE clause","Basic table joins (INNER, LEFT)","Aggregate functions (COUNT, SUM, AVG, GROUP BY)","ORDER BY / LIMIT","Basic data typing"]},
+    {path:"Main", subject:"Excel", topics:["Cell references (relative vs absolute)","Basic formulas (SUM, AVERAGE, COUNT, IF)","Sorting and filtering","Basic cell formatting and data types"]}
+  ], competency:[
+    {path:"Main", subject:"Algebra I", topics:["Variables and expressions","Linear equations","Graphs and rates of change","Systems of equations","Exponents and polynomials","Factoring"]}
+]},
+{phase:"Data Analyst", primary:[
+    {path:"Main", subject:"Intermediate SQL", topics:["Additional join types (RIGHT, FULL OUTER, SELF)","Subqueries","Common Table Expressions","CASE statements","HAVING clause","String functions (CONCAT, SUBSTRING, TRIM)","Working with date/time","NULL handling","UNION / UNION ALL"]},
+    {path:"Main", subject:"Basic Python", topics:["Imperative programming","Pandas","Numpy","Seaborn","Matplotlib","Plotly"]},
+    {path:"Main", subject:"Excel", topics:["Pivot tables","Lookups (VLOOKUP / XLOOKUP / INDEX-MATCH)","Conditional formulas (IF, SUMIF, COUNTIF)","Data validations","Charts and dashboarding","Power Query (basic)"]},
+    {path:"Tableau", subject:"Tableau Desktop", topics:["Connecting to data sources","Basic visualizations (bar, line, pie, scatter)","Filters and parameters","Calculated fields","Basic dashboard layout"]},
+    {path:"Power Platform", subject:"Power BI", topics:["Connecting to data sources","Basic visualizations (bar, line, pie, cards)","Filters and slicers","Calculated columns and measures (DAX basics)","Basic dashboard / report layout"]}
+  ], competency:[
+    {path:"Main", subject:"Algebra II", topics:["Quadratic equations and functions","Polynomial functions","Rational expressions and equations","Exponential and logarithmic functions","Function composition and inverses","Sequences and series"]},
+    {path:"Main", subject:"Statistics", topics:["Descriptive statistics (mean, median, mode, std dev, variance)","Data distributions (normal, skewed)","Correlation vs causation","Hypothesis testing (p-value, significance)","Confidence intervals","Sampling methods and bias"]},
+    {path:"Main", subject:"Probability", topics:["Probability rules (independent vs dependent events)","Conditional probability","Bayes' theorem","Probability distributions (binomial, Poisson, normal)","Expected value"]}
+]},
+{phase:"Data Engineer", primary:[
+    {path:"Main", subject:"Advanced SQL", topics:["Window functions (ROW_NUMBER, RANK, LAG/LEAD)","Running totals and moving averages","Recursive CTEs","Query optimization and execution plans","Indexing strategies","Transactions (COMMIT, ROLLBACK, ACID)","Stored procedures and functions","Partitioning strategies"]},
+    {path:"Main", subject:"Intermediate Python", topics:["Object oriented programming","Functional programming","Error handling (try/except)","File I/O and working with APIs (requests, JSON)","Virtual environments and package management","Pytest","SQLAlchemy","Apache Airflow (local)","PySpark","Great Expectations","Requests","Pyarrow","PyYAML"]},
+    {path:"AWS", subject:"Glue", topics:["ETL jobs","Glue Catalog","Crawlers","Boto3 (AWS SDK) for cross-service orchestration"]},
+    {path:"AWS", subject:"Redshift", topics:["Data warehousing basics","Table design","COPY command"]},
+    {path:"AWS", subject:"EMR", topics:["Running Spark/Hadoop jobs on managed clusters"]},
+    {path:"AWS", subject:"Step Functions", topics:["Orchestrating multistep workflows"]},
+    {path:"Azure", subject:"Fabric", topics:["Lakehouse basics","Data Factory pipelines in Fabric","OneLake"]},
+    {path:"Azure", subject:"Databricks", topics:["Spark basics","Notebooks","Delta Lake"]},
+    {path:"GCP", subject:"Dataflow", topics:["Apache Beam basics","Streaming vs batch pipelines"]},
+    {path:"GCP", subject:"Dataproc", topics:["Managed Spark/Hadoop clusters"]},
+    {path:"GCP", subject:"Cloud Composer", topics:["Airflow-based workflow orchestration"]},
+    {path:"Snowflake", subject:"Snowpipe", topics:["Continuous/automated data ingestion basics"]}
+  ], competency:[
+    {path:"Main", subject:"Discrete Math", topics:["Set theory basics","Logic and propositional calculus","Graph theory basics","Combinatorics","Big-O / algorithmic complexity"]}
+]},
+{phase:"Analytics Engineer", primary:[
+    {path:"Main", subject:"dbt", topics:["Models (SELECT statements as version control)","Sources and staging models","Tests (schema tests, custom tests)","Macros (Jinja templating)","Documentation generation"]},
+    {path:"AWS", subject:"Glue Catalog", topics:["Schema/metadata management","Table discovery for downstream querying"]},
+    {path:"Azure", subject:"Azure SQL DB", topics:["Querying and modeling data in a managed relational DB","Views"]},
+    {path:"GCP", subject:"BigQuery", topics:["Querying","Table partitioning/clustering","Views and materialized views"]},
+    {path:"GCP", subject:"Dataform", topics:["SQL based data transformation"]},
+    {path:"Snowflake", subject:"Copy Into", topics:["Bulk data loading from external stages"]}
+  ], competency:[
+    {path:"Main", subject:"Trigonometry", topics:["Right triangle trig (sin / cos / tan)","Unit circle","Radians vs degrees","Basic identities (Pythagorean identity)","Graphs of sine / cosine (periodicity, amplitude)"]}
+]},
+{phase:"Data Scientist - ML", primary:[
+    {path:"Main", subject:"Advanced Python", topics:["Scikit-learn","PyTorch","Tensorflow","Model evaluation","Feature engineering","MLflow"]},
+    {path:"AWS", subject:"SageMaker", topics:["Model training/deployment pipelines","Built-in algorithms","Endpoints"]},
+    {path:"Azure", subject:"Azure Machine Learning", topics:["Model training/deployment","AutoML","ML pipelines"]},
+    {path:"GCP", subject:"Vertex AI", topics:["Model training/deployment","AutoML","ML pipelines"]},
+    {path:"Snowflake", subject:"Cortex", topics:["LLM/ML functions in Snowflake SQL"]}
+  ], competency:[
+    {path:"Main", subject:"Linear Algebra for ML", topics:["Vectors, dot product","Matrix multiplication","Eigenvalues / eigenvectors","Change of basis","Tensor products","SVD","Gradient descent / Jacobians","Matrix norms","Positive semi-definite matrices","Determinants","Trace","Inner product spaces / Hilbert spaces","Sparse matrices","LU / QR decomposition","Markov matrices / stochastic matrices","Complex numbers"]},
+    {path:"Main", subject:"Calculus", topics:["Limits and continuity","Derivatives (rules, chain rule)","Partial derivatives","Gradients (multivariable extension)","Integrals (basics)","Optimization (minima and maxima)","Taylor series"]}
+]},
+{phase:"Data Scientist - Quantum", primary:[
+    {path:"Main", subject:"Quantum Programming", topics:["Qubits, gates, and circuits","Circuit construction and simulation","Measurement and probabilistic output","Clifford vs non-Clifford gates, T-count","Noise and error mitigation basics"]},
+    {path:"Main", subject:"Gates", topics:["X (Pauli-X) bit-flip","Y (Pauli-Y) bit-flip + phase-flip","Z (Pauli-Z) phase-flip","H (Hadamard) superposition","S (Phase) quarter-turn rotation","T (eighth-turn rotation) — T-count","Rotation gates (Rx, Ry, Rz)","CNOT (CX)","CZ (Controlled-Z)","SWAP","Toffoli (CCNOT)"]},
+    {path:"AWS", subject:"Braket", topics:["Circuit design & simulation"]},
+    {path:"Azure", subject:"Azure Quantum", topics:["Circuit design & simulation","Q# language basics"]},
+    {path:"IBM", subject:"Qiskit", topics:["Circuit design & simulation","Qiskit gate library"]}
+  ], competency:[
+    {path:"Main", subject:"Extended Linear Algebra", topics:["Unitary matrices","Complex vector spaces","Hermitian matrices"]},
+    {path:"Main", subject:"Quantum Mechanics", topics:["Wave-particle duality, double-slit experiment","Superposition","Quantum measurement and collapse","Entanglement","Schrödinger equation","Interpretations of QM","Bra-ket notation"]}
+]}
+];
+
+const selected = new Set();
+let pinned = null;
+
+function buildChips(){
+  const map = {cloud:'chips-cloud', bi:'chips-bi', quantum:'chips-quantum'};
+  Object.entries(TOGGLEABLE).forEach(([group,paths])=>{
+    const el = document.getElementById(map[group]);
+    paths.forEach(p=>{
+      const chip = document.createElement('button');
+      chip.className='chip'; chip.type='button';
+      chip.style.setProperty('--pc', PATH_COLORS[p]);
+      chip.innerHTML = `<span class="dot"></span>${p}`;
+      chip.addEventListener('click', ()=>{
+        selected.has(p) ? selected.delete(p) : selected.add(p);
+        chip.classList.toggle('active');
+        render();
+      });
+      el.appendChild(chip);
+    });
+  });
+}
+
+function makeNode(group, kind){ // kind: 'main' | 'math' | 'path'
+  const node = document.createElement('div');
+  node.className = 'node' + (kind==='path' ? ' path' : '');
+  const bubble = document.createElement('button');
+  bubble.type='button';
+  let cls = 'bubble';
+  if(kind==='main') cls += ' main';
+  else if(kind==='math') cls += ' math';
+  else {
+    cls += ' path-b';
+    bubble.style.setProperty('--pc', PATH_COLORS[group.path]);
+    if(selected.has(group.path)) cls += ' lit';
+  }
+  bubble.className = cls;
+  bubble.textContent = group.topics.length;
+  bubble.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(pinned === bubble){ pinned=null; hidePop(); return; }
+    pinned = bubble;
+    showPop(bubble, group);
+  });
+  bubble.addEventListener('mouseenter', ()=>{ if(!pinned) showPop(bubble, group); });
+  bubble.addEventListener('mouseleave', ()=>{ if(!pinned) hidePop(); });
+
+  const label = document.createElement('div');
+  label.className='blabel';
+  label.textContent = group.subject;
+
+  node.appendChild(bubble);
+  node.appendChild(label);
+  return node;
+}
+
+function showPop(bubble, group){
+  const pop = document.getElementById('popover');
+  document.getElementById('pop-title').textContent = group.subject;
+  const pathEl = document.getElementById('pop-path');
+  if(group.path === 'Main'){ pathEl.style.display='none'; }
+  else { pathEl.style.display='inline-block'; pathEl.textContent = group.path; pathEl.style.color = PATH_COLORS[group.path]; pathEl.style.borderColor = PATH_COLORS[group.path]; }
+  document.getElementById('pop-topics').innerHTML = group.topics.map(t=>`<li>${t}</li>`).join('');
+
+  const r = bubble.getBoundingClientRect();
+  pop.style.display='block';
+  const popW = 250;
+  let left = r.left + r.width/2 - popW/2;
+  left = Math.max(12, Math.min(left, window.innerWidth - popW - 12));
+  let top = r.bottom + 10;
+  if(top + 180 > window.innerHeight) top = r.top - 190;
+  pop.style.left = left+'px';
+  pop.style.top = top+'px';
+  pop.classList.add('show');
+}
+function hidePop(){ document.getElementById('popover').classList.remove('show'); }
+
+document.addEventListener('click', (e)=>{
+  const pop = document.getElementById('popover');
+  if(!pop.contains(e.target)){ pinned=null; hidePop(); }
+});
+
+function buildZone(labelText, cls, groups, kind){
+  const zone = document.createElement('div');
+  zone.className='zone';
+  const label = document.createElement('div');
+  label.className='zone-label '+cls;
+  label.innerHTML = `<span class="sw"></span>${labelText}`;
+  zone.appendChild(label);
+  const row = document.createElement('div');
+  row.className='bubble-row';
+  if(groups.length === 0){
+    row.innerHTML = `<span class="empty-note">no platform choice at this phase</span>`;
+  } else {
+    groups.forEach(g=> row.appendChild(makeNode(g, kind)));
+  }
+  zone.appendChild(row);
+  return zone;
+}
+
+function render(){
+  const rail = document.getElementById('rail');
+  rail.innerHTML='';
+  roadmap.forEach((ph,i)=>{
+    const phaseEl = document.createElement('div');
+    phaseEl.className='phase';
+    phaseEl.innerHTML = `
+      <div class="phase-node"></div>
+      <div class="phase-head"><span class="phase-index">0${i+1}</span><h2>${ph.phase}</h2></div>
+    `;
+    const pathGroups = ph.primary.filter(g=>g.path!=='Main');
+    const mainGroups = ph.primary.filter(g=>g.path==='Main');
+
+    if(pathGroups.length){
+      phaseEl.appendChild(buildZone('Platforms','platforms', pathGroups, 'path'));
+    }
+    phaseEl.appendChild(buildZone('Main','main', mainGroups, 'main'));
+    phaseEl.appendChild(buildZone('Competency','competency', ph.competency, 'math'));
+
+    rail.appendChild(phaseEl);
+  });
+}
+
+buildChips();
+render();
+</script>
+</body>
+</html>
