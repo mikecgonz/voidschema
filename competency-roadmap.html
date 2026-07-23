@@ -298,13 +298,15 @@ function showPop(bubble, group){
   else { pathEl.style.display='inline-block'; pathEl.textContent = group.path; pathEl.style.color = PATH_COLORS[group.path]; pathEl.style.borderColor = PATH_COLORS[group.path]; }
   document.getElementById('pop-topics').innerHTML = group.topics.map(t=>`<li>${t}</li>`).join('');
 
-  const r = bubble.getBoundingClientRect();
+const r = bubble.getBoundingClientRect();
   pop.style.display='block';
   const popW = 250;
+  const popH = 200; // rough estimated height, clamped below anyway
   let left = r.left + r.width/2 - popW/2;
   left = Math.max(12, Math.min(left, window.innerWidth - popW - 12));
   let top = r.bottom + 10;
-  if(top + 180 > window.innerHeight) top = r.top - 190;
+  if(top + popH > window.innerHeight) top = r.top - popH - 10;
+  top = Math.max(12, Math.min(top, window.innerHeight - popH - 12));
   pop.style.left = left+'px';
   pop.style.top = top+'px';
   pop.classList.add('show');
